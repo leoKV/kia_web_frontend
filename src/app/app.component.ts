@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'kia_web_frontend';
+  sideNavStatus:boolean = false;
 }
