@@ -34,10 +34,14 @@ export class SidenavComponent implements OnInit, OnChanges {
         open: false,
         subItems: tag.tags.map(tagString => {
           const [id, name] = tagString.split(':');
-          return { name };
+          return { id,name };
         })
       }));
     });
+  }
+
+  getCancionesByTags(id: number){
+    console.log(id);
   }
 
   getIconForTag(tipoTag: string): string {

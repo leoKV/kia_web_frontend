@@ -44,3 +44,8 @@ app-sidenav{
     width: calc(100% - 250px);
     left: 250px;
 }
+
+pagination-controls{
+  display: flex;
+  justify-content: center;
+}
