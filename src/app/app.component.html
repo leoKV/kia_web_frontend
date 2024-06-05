@@ -1,7 +1,7 @@
 <div class="container-fluid g-0">
   <app-header (sideNavToggled)="sideNavStatus = $event;"></app-header>
   <main>
-    <app-sidenav [sideNavStatus]="sideNavStatus" [ngClass]="{'app-sidenav-open':sideNavStatus}"></app-sidenav>
+    <app-sidenav [sideNavStatus]="sideNavStatus" [ngClass]="{'app-sidenav-open':sideNavStatus}" (tagsSelected)="onTagsSelected($event)"></app-sidenav>
     <div class="display-area p-4" [ngClass]="{'display-area-shrink':sideNavStatus}">
       <div class="row m-3 mb-5">
         <div class="col-md-4">
@@ -45,9 +45,21 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-3 mb-5" *ngFor="let cancion of canciones | paginate: {itemsPerPage: 12, currentPage: page}">
-          <app-card-song [cancion]="cancion"></app-card-song>
-        </div>
+        <ng-container *ngIf="!isFiltered">
+          <div class="col-md-3 mb-5" *ngFor="let cancion of canciones | paginate: {itemsPerPage: 12, currentPage: page}">
+            <app-card-song [cancion]="cancion"></app-card-song>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isFiltered && !noResults">
+          <div class="col-md-3 mb-5" *ngFor="let cancionTag of cancionesByTags | paginate: {itemsPerPage: 12, currentPage: page}">
+            <app-card-song [cancionTag]="cancionTag"></app-card-song>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isFiltered && noResults">
+          <div class="col-12">
+            <p id="noResults">Lo sentimos, no se encontraron resultados de búsqueda con los filtros seleccionados.</p>
+          </div>
+        </ng-container>
       </div>
       <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Siguiente"></pagination-controls>
     </div>

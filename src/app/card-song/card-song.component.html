@@ -1,7 +1,7 @@
-<div class="card" *ngIf="cancion">
+<div class="card" *ngIf="cancion || cancionTag">
     <div class="card-header">Karaoke IA</div>
     <div class="card-body">
-      <h5 class="card-title">{{cancion.nombreCancion}}</h5>
+      <h5 class="card-title">{{nombreCancion}}</h5>
     </div>
-    <div class="card-footer">{{cancion.nombreArtista}}</div>
+    <div class="card-footer">{{nombreArtista}}</div>
 </div>

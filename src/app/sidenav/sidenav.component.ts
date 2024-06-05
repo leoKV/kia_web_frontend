@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { TagService } from '../services/tag/tag.service';
 import { TipoTagDTO } from '../models/tipo-tag.dto';
+
 
 @Component({
   selector: 'app-sidenav',
@@ -9,9 +10,10 @@ import { TipoTagDTO } from '../models/tipo-tag.dto';
 })
 export class SidenavComponent implements OnInit, OnChanges {
   @Input() sideNavStatus: boolean = false;
+  @Output() tagsSelected = new EventEmitter<number[]>();
 
   list: any[] = []; //Inicializando lista de tags como vacía.
-
+  selectedTags: Set<number> = new Set<number>();
   constructor(
     public tagService: TagService
   ){}
@@ -61,5 +63,14 @@ export class SidenavComponent implements OnInit, OnChanges {
 
   closeAllSubmenus(): void {
     this.list.forEach(item => item.open = false);
+  }
+
+  onTagChange(event: any, tagId: number): void {
+    if (event.target.checked) {
+      this.selectedTags.add(tagId);
+    } else {
+      this.selectedTags.delete(tagId);
+    }
+    this.tagsSelected.emit(Array.from(this.selectedTags));
   }
 }

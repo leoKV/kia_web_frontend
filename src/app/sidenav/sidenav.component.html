@@ -10,11 +10,11 @@
         <ul class="sub-nav-list" *ngIf="item.open">
           <li class="sub-nav-list-item" *ngFor="let subItem of item.subItems">
             <ng-container *ngIf="item.name && (item.name.toLowerCase() === 'genero' || item.name.toLowerCase() === 'ritmo'); else checkboxTemplate">
-              <input type="radio" [id]="subItem.name" [name]="item.name" [value]="subItem.name" class="form-check-input" (click)="getCancionesByTags(subItem.id)">
+              <input type="radio" [id]="subItem.name" [name]="item.name" [value]="subItem.name" class="form-check-input" (change)="onTagChange($event, subItem.id)">
               <label [for]="subItem.name" class="form-check-label">{{subItem.name}}</label>
             </ng-container>
             <ng-template #checkboxTemplate>
-              <input type="checkbox" [id]="subItem.name" [name]="subItem.name" [value]="subItem.name" class="form-check-input" (click)="getCancionesByTags(subItem.id)">
+              <input type="checkbox" [id]="subItem.name" [name]="subItem.name" [value]="subItem.name" class="form-check-input" (change)="onTagChange($event, subItem.id)">
               <label [for]="subItem.name" class="form-check-label">{{subItem.name}}</label>
             </ng-template>
           </li>

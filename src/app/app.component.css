@@ -48,4 +48,13 @@ app-sidenav{
 pagination-controls{
   display: flex;
   justify-content: center;
+  color: white;
+  font-size: large;
+}
+
+#noResults{
+    color: white;
+    text-align: center;
+    font-size: 35px;
+    font-weight: bold;
 }
