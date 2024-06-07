@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CancionDTO } from '../models/cancion.dto';
 import { CancionTagDTO } from '../models/cancion-tag.dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card-song',
@@ -10,6 +11,8 @@ import { CancionTagDTO } from '../models/cancion-tag.dto';
 export class CardSongComponent {
   @Input() cancion: CancionDTO | undefined;
   @Input() cancionTag: CancionTagDTO | undefined;
+
+  constructor(private router:Router){}
 
   get nombreCancion(): string {
     return this.getField('nombreCancion');
@@ -33,5 +36,11 @@ export class CardSongComponent {
         return '';
     }
     return '';
+  }
+
+  navigateToDetail(id:number | undefined):void{
+    if(id){
+      this.router.navigate(['/cancion-detail',id]);
+    }
   }
 }

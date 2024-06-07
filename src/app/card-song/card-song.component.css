@@ -35,7 +35,7 @@
     text-overflow: ellipsis;
 }
 
-.card{
+/* .card{
     width: 18rem;
     height: 15rem;
     padding: 0px;
@@ -44,4 +44,33 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: background-color 0.3s ease;
+} */
+.card {
+    width: 100%; /* Hace que la tarjeta ocupe todo el ancho del contenedor */
+    max-width: 18rem; /* Limita el ancho máximo de la tarjeta */
+    height:15rem; /* Hace que la altura se ajuste automáticamente */
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: background-color 0.3s ease;
+}
+
+.card:hover {
+    background-color: rgba(247, 244, 244, 0.3);
+}
+
+.card-header,
+.card-body,
+.card-footer {
+    transition: background-color 0.3s ease;
+}
+
+.card:hover .card-header,
+.card:hover .card-body,
+.card:hover .card-footer {
+    background-color: rgba(247, 244, 244, 0.3);
 }

@@ -21,7 +21,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAllCanciones();
-   
   }
 
   loadAllCanciones(){
@@ -31,21 +30,34 @@ export class AppComponent implements OnInit {
       this.noResults = false;
     });
   }
-
+  
   onTagsSelected(tags: number[]): void {
+    if (tags.length === 0) {
+      this.loadAllCanciones(); // Si no hay etiquetas seleccionadas, cargar todas las canciones
+      return;
+    }
+
     this.cancionService.getCancionesByTags(tags).subscribe((data: CancionTagDTO[]) => {
-      // Actualiza las canciones solo si se reciben datos
+      //console.log("Canciones filtradas:", data);
+
+      this.cancionesByTags = data;
+      this.isFiltered = true;
+      this.noResults = data.length === 0; // Si no hay resultados, mostrar el mensaje de "sin resultados"
+
+      // Actualizar el arreglo de canciones filtradas y los estados
       if (data.length > 0) {
-        console.log("Canciones filtradas:", data);
         this.cancionesByTags = data;
-        this.isFiltered = true;
         this.noResults = false;
-      }else{
-        this.cancionesByTags = []
-        this.isFiltered = true;
+        this.page=1;
+      } else {
+        this.cancionesByTags = [];
         this.noResults = true;
       }
+    }, (error) => {
+      //console.error("Error al filtrar canciones:", error);
+      this.cancionesByTags = [];
+      this.isFiltered = true;
+      this.noResults = true;
     });
   }
-
 }

@@ -4,6 +4,7 @@ import { CancionDTO } from '../../models/cancion.dto';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CancionTagDTO } from '../../models/cancion-tag.dto';
+import { CancionDetailDTO } from '../../models/cancion-detail.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -20,5 +21,9 @@ export class CancionService {
   getCancionesByTags(tags:number[]):Observable<CancionTagDTO[]>{
     const params = new HttpParams().set('tags', tags.join(','));
     return this.http.get<CancionTagDTO[]>(`${this.API_URL}cancionTag/`, { params });
+  }
+
+  getCancionDetailById(id:number):Observable<CancionDetailDTO>{
+    return this.http.get<CancionDetailDTO>(`${this.API_URL}cancion/detalle/?id=${id}`);
   }
 }

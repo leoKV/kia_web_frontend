@@ -14,9 +14,8 @@ export class SidenavComponent implements OnInit, OnChanges {
 
   list: any[] = []; //Inicializando lista de tags como vacía.
   selectedTags: Set<number> = new Set<number>();
-  constructor(
-    public tagService: TagService
-  ){}
+  //selectedTags: { [key: number]: boolean } = {};
+  constructor(public tagService: TagService){}
   ngOnInit(): void {
     this.loadTags();
   }
@@ -42,10 +41,6 @@ export class SidenavComponent implements OnInit, OnChanges {
     });
   }
 
-  getCancionesByTags(id: number){
-    console.log(id);
-  }
-
   getIconForTag(tipoTag: string): string {
     // Asigna iconos basados en el tipo de tag
     switch (tipoTag?.toLowerCase()) {
@@ -64,13 +59,23 @@ export class SidenavComponent implements OnInit, OnChanges {
   closeAllSubmenus(): void {
     this.list.forEach(item => item.open = false);
   }
-
-  onTagChange(event: any, tagId: number): void {
+  
+  onTagChange(event: any, tagId: number, itemName: string): void {
     if (event.target.checked) {
+      if (event.target.type === 'radio') {
+        // Eliminar todos los ids del mismo grupo
+        const grupo = this.list.find(item => item.name === itemName);
+        grupo.subItems.forEach((subItem: any) => {
+          this.selectedTags.delete(subItem.id);
+        });
+      }
       this.selectedTags.add(tagId);
     } else {
       this.selectedTags.delete(tagId);
     }
+  
+    console.log('TAGS FINALES QUE SE ENVIAN', this.selectedTags);
     this.tagsSelected.emit(Array.from(this.selectedTags));
   }
+  
 }

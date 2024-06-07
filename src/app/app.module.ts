@@ -7,13 +7,17 @@ import { HeaderComponent } from './header/header.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { CardSongComponent } from './card-song/card-song.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { CarritoComponent } from './carrito/carrito.component';
+import { CancionDetailComponent } from './cancion-detail/cancion-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     SidenavComponent,
-    CardSongComponent
+    CardSongComponent,
+    CarritoComponent,
+    CancionDetailComponent
   ],
   imports: [
     BrowserModule,
