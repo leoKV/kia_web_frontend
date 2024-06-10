@@ -8,25 +8,31 @@ import { CancionDetailDTO } from '../models/cancion-detail.dto';
   templateUrl: './cancion-detail.component.html',
   styleUrl: './cancion-detail.component.css'
 })
-export class CancionDetailComponent implements OnInit {
+// export class CancionDetailComponent implements OnInit {
   
-  cancionDetail : CancionDetailDTO | undefined;
+//   cancionDetail : CancionDetailDTO | undefined;
 
-  constructor(
-    private route: ActivatedRoute,
-    private cancionService:CancionService
-  ){}
+//   constructor(
+//     private route: ActivatedRoute,
+//     private cancionService:CancionService
+//   ){}
 
-  ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const id = +params['id'];
-      this.loadCancionDetail(id);
-    });
-  }
+//   ngOnInit(): void {
+//     this.route.params.subscribe(params => {
+//       const id = +params['id'];
+//       this.loadCancionDetail(id);
+//     });
+//   }
 
-  loadCancionDetail(id: number): void {
-    this.cancionService.getCancionDetailById(id).subscribe((data: CancionDetailDTO) => {
-      this.cancionDetail = data;
-    });
-  }
+//   loadCancionDetail(id: number): void {
+//     this.cancionService.getCancionDetailById(id).subscribe((data: CancionDetailDTO) => {
+//       this.cancionDetail = data;
+//     });
+//   }
+// }
+
+export class CancionDetailComponent {
+  
+  
 }
+

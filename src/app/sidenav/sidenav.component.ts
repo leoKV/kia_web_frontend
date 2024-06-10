@@ -14,19 +14,24 @@ export class SidenavComponent implements OnInit, OnChanges {
 
   list: any[] = []; //Inicializando lista de tags como vacía.
   selectedTags: Set<number> = new Set<number>();
-  //selectedTags: { [key: number]: boolean } = {};
+
+  // Almacena el estado de los elementos seleccionados
+  selectedStates: { [key: string]: Set<number> } = {};
+
   constructor(public tagService: TagService){}
   ngOnInit(): void {
     this.loadTags();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes['sideNavStatus'] && !changes['sideNavStatus'].currentValue){
-      this.closeAllSubmenus();
+    if (changes['sideNavStatus']) {
+      if (!changes['sideNavStatus'].currentValue) {
+        this.closeAllSubmenus();
+      }
     }
   }
 
-  loadTags():void{
+  loadTags(): void {
     this.tagService.getTagsByTipoTag().subscribe((data: TipoTagDTO[]) => {
       this.list = data.map(tag => ({
         number: tag.tipo_tag_id.toString(),
@@ -35,9 +40,19 @@ export class SidenavComponent implements OnInit, OnChanges {
         open: false,
         subItems: tag.tags.map(tagString => {
           const [id, name] = tagString.split(':');
-          return { id,name };
+          return { id: +id, name, selected: false };  // Aseguramos que 'selected' esté presente
         })
       }));
+
+      // Inicializar el estado seleccionado
+      this.list.forEach(item => {
+        if (!this.selectedStates[item.name]) {
+          this.selectedStates[item.name] = new Set<number>();
+        }
+        item.subItems.forEach((subItem: { id: number, name: string, selected: boolean }) => {
+          subItem.selected = this.selectedStates[item.name].has(subItem.id);
+        });
+      });
     });
   }
 
@@ -50,9 +65,14 @@ export class SidenavComponent implements OnInit, OnChanges {
       default: return 'fa-solid fa-tag';
     }
   }
+
   toggleSubmenu(item: any): void {
     if (this.sideNavStatus) {
       item.open = !item.open;
+      // Restaurar estado de selección cuando se abre un submenú
+      if (item.open) {
+        this.restoreSelectedStates(item);
+      }
     }
   }
 
@@ -61,21 +81,43 @@ export class SidenavComponent implements OnInit, OnChanges {
   }
   
   onTagChange(event: any, tagId: number, itemName: string): void {
-    if (event.target.checked) {
-      if (event.target.type === 'radio') {
-        // Eliminar todos los ids del mismo grupo
+    const isChecked = event.target.checked;
+    const inputType = event.target.type;
+
+    if (isChecked) {
+      if (inputType === 'radio') {
         const grupo = this.list.find(item => item.name === itemName);
-        grupo.subItems.forEach((subItem: any) => {
+        grupo.subItems.forEach((subItem: { id: number }) => {
           this.selectedTags.delete(subItem.id);
+          this.selectedStates[itemName].delete(subItem.id);
         });
       }
       this.selectedTags.add(tagId);
+      this.selectedStates[itemName].add(tagId);
     } else {
       this.selectedTags.delete(tagId);
+      this.selectedStates[itemName].delete(tagId);
     }
-  
+
     console.log('TAGS FINALES QUE SE ENVIAN', this.selectedTags);
     this.tagsSelected.emit(Array.from(this.selectedTags));
   }
+
+  restoreSelectedStates(item: any): void {
+    item.subItems.forEach((subItem: { id: number, selected: boolean }) => {
+      subItem.selected = this.selectedStates[item.name].has(subItem.id);
+    });
+  }
+
+  clearFilters(itemName: string): void {
+    const grupo = this.list.find(item => item.name === itemName);
+    grupo.subItems.forEach((subItem: { id: number, name: string, selected: boolean }) => {
+      this.selectedTags.delete(subItem.id);
+      this.selectedStates[itemName].delete(subItem.id);
+      subItem.selected = false;
+    });
+    this.tagsSelected.emit(Array.from(this.selectedTags));
+  }
+
   
 }
