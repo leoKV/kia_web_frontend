@@ -10,6 +10,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { CarritoComponent } from './carrito/carrito.component';
 import { CancionDetailComponent } from './cancion-detail/cancion-detail.component';
 import { HomeComponent } from './home/home.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { HomeComponent } from './home/home.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    FormsModule
   ],
   providers: [
     provideClientHydration()

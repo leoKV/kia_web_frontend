@@ -2,10 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { CarritoComponent } from './carrito/carrito.component';
+import { CancionDetailComponent } from './cancion-detail/cancion-detail.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'carrito', component: CarritoComponent },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
+  {path:'home/cancion-detail/:id', component: CancionDetailComponent},
+  { path: 'home/car', component: CarritoComponent }
 ];
 
 @NgModule({

@@ -1,5 +1,5 @@
 <div class="container-fluid g-0">
-  <app-header [showElements]="['menuButton', 'logo', 'search', 'cart']" (sideNavToggled)="sideNavStatus = $event;"></app-header>
+  <app-header [showElements]="['menuButton', 'logo', 'search', 'cart']" (sideNavToggled)="sideNavStatus = $event;" (search)="onSearch($event)"></app-header>
   <main>
     <app-sidenav [sideNavStatus]="sideNavStatus" [ngClass]="{'app-sidenav-open':sideNavStatus}" (tagsSelected)="onTagsSelected($event)"></app-sidenav>
     <div class="display-area p-4" [ngClass]="{'display-area-shrink':sideNavStatus}">
@@ -66,7 +66,7 @@
         </ng-container>
         <ng-container *ngIf="isFiltered && noResults">
           <div class="col-12" id="noResults">
-            <p >Lo sentimos, no se encontraron resultados de búsqueda con los filtros seleccionados.</p>
+            <p >Lo sentimos, no se encontraron resultados de búsqueda.</p>
             <img src="../assets/img/mariachi.gif" alt="mariachi llorando">
           </div>
         </ng-container>

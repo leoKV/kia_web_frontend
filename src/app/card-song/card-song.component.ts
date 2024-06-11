@@ -40,7 +40,7 @@ export class CardSongComponent {
 
   navigateToDetail(id:number | undefined):void{
     if(id){
-      this.router.navigate(['/cancion-detail',id]);
+      this.router.navigate(['/home/cancion-detail',id]);
     }
   }
 }

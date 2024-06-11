@@ -1,1 +1,22 @@
-<p>cancion detail works!</p>
+<div class="container-fluid g-0">
+    <app-header [showElements]="['logo', 'cart']" headerClass="header-carrito"></app-header>
+      <main>
+        <div class="display-area p-4">
+          <div class="row bread">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item m-1"><a routerLink="/home">Inicio</a></li>
+                <li class="breadcrumb-item active m-1" aria-current="page">Detalles</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="divider-line"></div>
+              El detalle funciona!!!
+              <div *ngIf="cancionDetail">
+                <h1>{{cancionDetail.cancion_id}}</h1>
+                <h2>{{ cancionDetail.cancion_nombre }}</h2>
+                <p>Artista: {{ cancionDetail.artista }}</p>
+              </div>
+        </div>
+      </main>
+</div>

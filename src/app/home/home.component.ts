@@ -60,4 +60,28 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  onSearch(searchTerm: string): void {
+    if (!searchTerm.trim()) {
+      this.loadAllCanciones(); 
+      return;
+    }
+
+    this.cancionService.getCancionesByNombre(searchTerm).subscribe((data: CancionDTO[]) => {
+      if (data.length > 0) {
+        this.canciones = data;
+        this.isFiltered = false;
+        this.noResults = false;
+        this.page = 1;
+      } else {
+        this.canciones = [];
+        this.isFiltered = true;
+        this.noResults = true;
+      }
+    }, (error) => {
+      this.canciones = [];
+      this.isFiltered = true;
+      this.noResults = true;
+    });
+  }
+
 }

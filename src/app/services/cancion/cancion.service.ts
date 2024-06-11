@@ -23,7 +23,13 @@ export class CancionService {
     return this.http.get<CancionTagDTO[]>(`${this.API_URL}cancionTag/`, { params });
   }
 
+  getCancionesByNombre(nombre:string):Observable<CancionDTO[]>{
+    const params = new HttpParams().set('nombre', nombre);
+    return this.http.get<CancionDTO[]>(`${this.API_URL}cancion/buscar/`, {params})
+  }
+
   getCancionDetailById(id:number):Observable<CancionDetailDTO>{
-    return this.http.get<CancionDetailDTO>(`${this.API_URL}cancion/detalle/?id=${id}`);
+    const params = new HttpParams().set('id', id.toString());
+    return this.http.get<CancionDetailDTO>(`${this.API_URL}cancion/detalle/`, {params});
   }
 }
