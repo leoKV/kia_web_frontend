@@ -9,6 +9,7 @@ import { CardSongComponent } from './card-song/card-song.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CarritoComponent } from './carrito/carrito.component';
 import { CancionDetailComponent } from './cancion-detail/cancion-detail.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { CancionDetailComponent } from './cancion-detail/cancion-detail.componen
     SidenavComponent,
     CardSongComponent,
     CarritoComponent,
-    CancionDetailComponent
+    CancionDetailComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

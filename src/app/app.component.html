@@ -1,83 +1,8 @@
-<div class="container-fluid g-0">
-  <app-header (sideNavToggled)="sideNavStatus = $event;"></app-header>
-  <main>
-    <app-sidenav [sideNavStatus]="sideNavStatus" [ngClass]="{'app-sidenav-open':sideNavStatus}" (tagsSelected)="onTagsSelected($event)"></app-sidenav>
-    <div class="display-area p-4" [ngClass]="{'display-area-shrink':sideNavStatus}">
-      <div class="row bread">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item active m-1" aria-current="page">Inicio</li>
-          </ol>
-        </nav>
-      </div>
-      <div class="row mt-3">
-        <div class="col-12 col-sm-6 col-md-4 mb-3">
-          <div class="dropdown">
-            <a class="btn btn-secondary dropdown-toggle w-50" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Genero
-            </a>
-          
-            <ul class="dropdown-menu w-50">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-md-4 mb-3">
-          <div class="dropdown">
-            <a class="btn btn-secondary dropdown-toggle w-50" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Ritmo
-            </a>
-          
-            <ul class="dropdown-menu w-50">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </div>
-        </div>
-        
-        <div class="col-12 col-sm-6 col-md-4 mb-3">
-          <div class="dropdown">
-            <a class="btn btn-secondary dropdown-toggle w-50" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-             Otro
-            </a>
-          
-            <ul class="dropdown-menu w-50">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="divider-line"></div>
-      <div class="row" [ngClass]="{'card-container-menu-open':sideNavStatus}">
-        <ng-container *ngIf="!isFiltered">
-          <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-5" *ngFor="let cancion of canciones | paginate: {itemsPerPage: 12, currentPage: page}">
-            <app-card-song [cancion]="cancion"></app-card-song>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="isFiltered && !noResults">
-          <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-5" *ngFor="let cancionTag of cancionesByTags | paginate: {itemsPerPage: 12, currentPage: page}">
-            <app-card-song [cancionTag]="cancionTag"></app-card-song>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="isFiltered && noResults">
-          <div class="col-12" id="noResults">
-            <p >Lo sentimos, no se encontraron resultados de búsqueda con los filtros seleccionados.</p>
-            <img src="../assets/img/mariachi.gif" alt="mariachi llorando">
-          </div>
-        </ng-container>
-      </div>
-      <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Siguiente" *ngIf="!noResults" class="pagination"></pagination-controls>
-    </div>
-  </main>
-</div>
-
 <router-outlet></router-outlet>
+
+
+
+
 
 
 

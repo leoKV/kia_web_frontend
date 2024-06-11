@@ -19,6 +19,10 @@ nav{
     border-radius: 20%;
 }
 
+.header-carrito .car {
+    margin-left: auto; /* Empuja el carrito a la derecha */
+}
+
 .search-bar {
     max-width: 800px; /* Ajusta este valor según tus necesidades */
     width: 100%;
