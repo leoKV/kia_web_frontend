@@ -5,10 +5,13 @@ import { CarritoComponent } from './carrito/carrito.component';
 import { CancionDetailComponent } from './cancion-detail/cancion-detail.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
-  {path:'home/cancion-detail/:id', component: CancionDetailComponent},
-  { path: 'home/car', component: CarritoComponent }
+  // { path: '', redirectTo: 'home', pathMatch: 'full' },
+  // { path: 'home', component: HomeComponent },
+  // {path:'home/cancion-detail/:id', component: CancionDetailComponent},
+  // { path: 'home/car', component: CarritoComponent }
+  { path:'', component: HomeComponent },
+  { path:'car', component: CarritoComponent },
+  {path:'cancion-detail/:id', component: CancionDetailComponent},
 ];
 
 @NgModule({

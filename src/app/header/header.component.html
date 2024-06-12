@@ -4,16 +4,16 @@
         <i class="fa-solid fa-bars"></i>
     </div>
     <!-- Logotipo -->
-    <a routerLink="/home" class="logo-container p-2 me-3" *ngIf="showElements.includes('logo')">
+    <a routerLink="/" class="logo-container p-2 me-3" *ngIf="showElements.includes('logo')">
         <img src="../../assets/img/kia-logo.png" alt="Logo" class="logo">
     </a>
     <!--Barra de búsqueda de canciones-->
     <form class="d-flex search-bar mx-auto" *ngIf="showElements.includes('search')" (ngSubmit)="onSearch()">
-        <input class="form-control me-2" type="search" placeholder="Buscar canción por nombre o artista..." [(ngModel)]="searchTerm" name="searchTerm" (input)="onSearchInput()">
+        <input class="form-control me-2" type="search" placeholder="Buscar canción por nombre o artista..." [(ngModel)]="searchTerm" name="searchTerm" maxlength="50" (input)="onSearchInput()">
         <button class="btn btn-outline-light" type="submit">Buscar</button>
     </form>
     <!--Carrito de compras-->
-    <a routerLink="/home/car" class="car p-2 text-light" *ngIf="showElements.includes('cart')">
+    <a routerLink="/car" class="car p-2 text-light" *ngIf="showElements.includes('cart')">
         <i class="fa-solid fa-cart-shopping"></i>
     </a>
 </nav>
