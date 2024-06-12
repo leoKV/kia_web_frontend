@@ -30,3 +30,21 @@ main{
 .bread{
     background-color: rgba(255, 255, 255, 0.3);
 }
+
+.titulo{
+    color: white;
+    font-family: 'Helvetica', sans-serif;
+    text-align: center;
+}
+
+.btn-responsive {
+    width: 100%;
+}
+  
+  @media (min-width: 768px) {
+    .btn-responsive {
+      width: auto;
+      min-width: 650px; /* Ajusta el valor según tus necesidades */
+      max-width: 700px; /* Ajusta el valor según tus necesidades */
+    }
+  }

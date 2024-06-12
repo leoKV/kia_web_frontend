@@ -30,3 +30,9 @@ main{
 .bread{
     background-color: rgba(255, 255, 255, 0.3);
 }
+
+.titulo{
+    color: white;
+    font-family: 'Helvetica', sans-serif;
+    text-align: center;
+}
