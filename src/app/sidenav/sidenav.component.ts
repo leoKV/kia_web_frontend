@@ -119,5 +119,6 @@ export class SidenavComponent implements OnInit, OnChanges {
     this.tagsSelected.emit(Array.from(this.selectedTags));
   }
 
+ 
   
 }
