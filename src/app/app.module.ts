@@ -11,6 +11,7 @@ import { CarritoComponent } from './carrito/carrito.component';
 import { CancionDetailComponent } from './cancion-detail/cancion-detail.component';
 import { HomeComponent } from './home/home.component';
 import { FormsModule } from '@angular/forms';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { FormsModule } from '@angular/forms';
     CardSongComponent,
     CarritoComponent,
     CancionDetailComponent,
-    HomeComponent
+    HomeComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,

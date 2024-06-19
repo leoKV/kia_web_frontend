@@ -8,10 +8,10 @@
         </span>
       </div>
       <ul class="sub-nav-list" *ngIf="item.open">
-        <!-- Opción "Todas" -->
+        <!-- Verifica si el nombre del grupo no es 'otro' para mostrar la opción 'Todas' -->
         <li *ngIf="item.name.toLowerCase() !== 'otro'" class="sub-nav-list-item">
-          <input type="radio" [id]="item.name + '-all'" [name]="item.name" value="all" class="form-check-input" (change)="clearFilters(item.name)">
-          <label [for]="item.name + '-all'" class="form-check-label">Todos</label>
+          <input type="radio" [id]="item.name + '-all'" [name]="item.name" value="all" class="form-check-input" [checked]="item.allSelected" (change)="clearFilters(item.name)">
+          <label [for]="item.name + '-all'" class="form-check-label">Todas</label>
         </li>
         <!-- Otras opciones -->
         <li class="sub-nav-list-item" *ngFor="let subItem of item.subItems">

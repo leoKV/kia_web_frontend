@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CancionService } from '../services/cancion/cancion.service';
 import { CancionDetailDTO } from '../models/cancion-detail.dto';
+import { CartService } from '../services/cart/cart.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cancion-detail',
@@ -14,7 +16,8 @@ export class CancionDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private cancionService:CancionService
+    private cancionService:CancionService,
+    private cartService: CartService
   ){}
 
   ngOnInit(): void {
@@ -22,10 +25,6 @@ export class CancionDetailComponent implements OnInit {
     if (id) {
       this.loadCancionDetail(parseInt(id, 10));
     }
-    // this.route.params.subscribe(params => {
-    //   const id = +params['id'];
-    //   this.loadCancionDetail(id);
-    // });
   }
 
   loadCancionDetail(id: number): void {
@@ -33,6 +32,31 @@ export class CancionDetailComponent implements OnInit {
       this.cancionDetail = data;
     });
   }
+  
+  addToCart():void{
+    if(this.cancionDetail){
+      const wasAdded = this.cartService.addToCart(this.cancionDetail);
+      if (wasAdded) {
+        // Mostrando alerta de éxito
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Karaoke agregado correctamente!",
+          showConfirmButton: false,
+          timer: 2500
+        });
+      }else{
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "El karaoke ya está en el carrito!",
+          showConfirmButton: false,
+          timer: 2500
+        });
+      }
+    }
+  }
+
 }
 
 
