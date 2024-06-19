@@ -27,5 +27,6 @@ export class HeaderComponent {
     if (!this.searchTerm.trim()) {
       this.search.emit('');
     }
+    this.searchTerm = this.searchTerm.replace(/[^a-zA-Z0-9\s]/g, '').substring(0, 50);
   }
 }

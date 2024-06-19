@@ -41,10 +41,98 @@ main{
     width: 100%;
 }
   
-  @media (min-width: 768px) {
+@media (min-width: 768px) {
     .btn-responsive {
       width: auto;
-      min-width: 650px; /* Ajusta el valor según tus necesidades */
-      max-width: 700px; /* Ajusta el valor según tus necesidades */
+      min-width: 650px;
+      max-width: 700px;
     }
-  }
+}
+
+.card-header{
+    color: black;
+    font-size: 25px;
+    text-align: center;
+    font-weight: bold;
+    padding: 0.5rem;
+}
+
+.card-body{
+    background-color: #e4d30c;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.card-title{
+    color: black;
+    font-weight: bold;
+    font-size: 25px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-footer{
+    color: white;
+    font-size: 18px;
+    background-color: #465949;
+    padding: 0.5rem;
+    text-align: center;
+   
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card {
+    width: 100%;
+    max-width: 18rem;
+    height:15rem;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: background-color 0.3s ease;
+}
+
+.card:hover {
+    background-color: rgba(247, 244, 244, 0.3);
+}
+
+.card-header,
+.card-body,
+.card-footer {
+    transition: background-color 0.3s ease;
+}
+
+.card:hover .card-header,
+.card:hover .card-body,
+.card:hover .card-footer {
+    background-color: rgba(247, 244, 244, 0.3);
+}
+
+
+.btn-eliminar {
+    width: 100%;
+    max-width: 18rem;
+}
+  
+#noResults {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 35px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#noResults p{
+    background-color: rgba(255, 255, 255, 0.3);
+}
+

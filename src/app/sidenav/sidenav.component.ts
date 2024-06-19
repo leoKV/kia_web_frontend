@@ -40,11 +40,11 @@ export class SidenavComponent implements OnInit, OnChanges {
         open: false,
         subItems: tag.tags.map(tagString => {
           const [id, name] = tagString.split(':');
-          return { id: +id, name, selected: false };  // Aseguramos que 'selected' esté presente
-        })
+          return { id: +id, name, selected: false };
+        }),
+        allSelected: false // Añadimos esta propiedad para gestionar la selección de "Todas"
       }));
-
-      // Inicializar el estado seleccionado
+  
       this.list.forEach(item => {
         if (!this.selectedStates[item.name]) {
           this.selectedStates[item.name] = new Set<number>();
@@ -52,10 +52,11 @@ export class SidenavComponent implements OnInit, OnChanges {
         item.subItems.forEach((subItem: { id: number, name: string, selected: boolean }) => {
           subItem.selected = this.selectedStates[item.name].has(subItem.id);
         });
+        item.allSelected = this.selectedStates[item.name].size === 0; // Consideramos "Todas" seleccionada si no hay otros elementos seleccionados
       });
     });
   }
-
+  
   getIconForTag(tipoTag: string): string {
     // Asigna iconos basados en el tipo de tag
     switch (tipoTag?.toLowerCase()) {
@@ -81,16 +82,16 @@ export class SidenavComponent implements OnInit, OnChanges {
   }
   
   onTagChange(event: any, tagId: number, itemName: string): void {
-    const isChecked = event.target.checked;
-    const inputType = event.target.type;
-
-    if (isChecked) {
-      if (inputType === 'radio') {
-        const grupo = this.list.find(item => item.name === itemName);
-        grupo.subItems.forEach((subItem: { id: number }) => {
+    const grupo = this.list.find(item => item.name === itemName);
+  
+    if (event.target.checked) {
+      if (event.target.type === 'radio') {
+        grupo.subItems.forEach((subItem: { id: number, name: string, selected: boolean }) => {
           this.selectedTags.delete(subItem.id);
           this.selectedStates[itemName].delete(subItem.id);
+          subItem.selected = false;
         });
+        grupo.allSelected = false;
       }
       this.selectedTags.add(tagId);
       this.selectedStates[itemName].add(tagId);
@@ -98,8 +99,10 @@ export class SidenavComponent implements OnInit, OnChanges {
       this.selectedTags.delete(tagId);
       this.selectedStates[itemName].delete(tagId);
     }
-
-    console.log('TAGS FINALES QUE SE ENVIAN', this.selectedTags);
+  
+    // Actualiza el estado de la opción "Todas"
+    grupo.allSelected = this.selectedStates[itemName].size === 0;
+  
     this.tagsSelected.emit(Array.from(this.selectedTags));
   }
 
@@ -116,9 +119,8 @@ export class SidenavComponent implements OnInit, OnChanges {
       this.selectedStates[itemName].delete(subItem.id);
       subItem.selected = false;
     });
+    grupo.allSelected = true; // Marcamos "Todas" como seleccionada
     this.tagsSelected.emit(Array.from(this.selectedTags));
   }
 
- 
-  
 }

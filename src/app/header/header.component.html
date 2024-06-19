@@ -9,7 +9,7 @@
     </a>
     <!--Barra de búsqueda de canciones-->
     <form class="d-flex search-bar mx-auto" *ngIf="showElements.includes('search')" (ngSubmit)="onSearch()">
-        <input class="form-control me-2" type="search" placeholder="Buscar canción por nombre o artista..." [(ngModel)]="searchTerm" name="searchTerm" maxlength="50" (input)="onSearchInput()">
+        <input class="form-control me-2" type="search" placeholder="Buscar canción por nombre o artista..." [(ngModel)]="searchTerm" name="searchTerm" maxlength="50" pattern="[a-zA-Z0-9\s]*" (input)="onSearchInput()">
         <button class="btn btn-outline-light" type="submit">Buscar</button>
     </form>
     <!--Carrito de compras-->
