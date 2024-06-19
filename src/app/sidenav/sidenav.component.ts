@@ -79,7 +79,6 @@ export class SidenavComponent implements OnInit, OnChanges {
   closeAllSubmenus(): void {
     this.list.forEach(item => item.open = false);
   }
-  
   onTagChange(event: any, tagId: number, itemName: string): void {
     const isChecked = event.target.checked;
     const inputType = event.target.type;
@@ -119,6 +118,4 @@ export class SidenavComponent implements OnInit, OnChanges {
     this.tagsSelected.emit(Array.from(this.selectedTags));
   }
 
- 
-  
 }

@@ -1,28 +1,45 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { CancionDTO } from '../models/cancion.dto';
 import { CancionTagDTO } from '../models/cancion-tag.dto';
 import { CancionService } from '../services/cancion/cancion.service';
+import { TagService } from '../services/tag/tag.service';
+import { TipoTagDTO } from '../models/tipo-tag.dto';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  sideNavStatus:boolean = false;
+  sideNavStatus: boolean = false;
   canciones: CancionDTO[] = [];
-  cancionesByTags:CancionTagDTO[] =[];
-  page!:number;
+  cancionesByTags: CancionTagDTO[] = [];
+  page!: number;
   isFiltered: boolean = false;
   noResults: boolean = false;
+  tiposTags: TipoTagDTO[] = [];
+  selectedTags: string[] = [];
+  otrosForm: FormGroup;
 
-  constructor(public cancionService: CancionService){}
+  @ViewChild('otrosDropdown') otrosDropdown!: ElementRef;
+
+  constructor(
+    public cancionService: CancionService,
+    private tagService: TagService,
+    private fb: FormBuilder
+  ) {
+    this.otrosForm = this.fb.group({
+      tags: this.fb.array([])
+    });
+  }
 
   ngOnInit(): void {
     this.loadAllCanciones();
+    this.loadTipoTags();
   }
 
-  loadAllCanciones(){
+  loadAllCanciones() {
     this.cancionService.getAllCanciones().subscribe((data: CancionDTO[]) => {
       this.canciones = data;
       this.isFiltered = false;
@@ -30,39 +47,42 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  loadTipoTags() {
+    this.tagService.getTagsByTipoTag().subscribe((data: TipoTagDTO[]) => {
+      this.tiposTags = data;
+    });
+  }
+
   onTagsSelected(tags: number[]): void {
+    this.selectedTags = tags.map(tag => tag.toString());
     if (tags.length === 0) {
-      this.loadAllCanciones(); // Si no hay etiquetas seleccionadas, cargar todas las canciones
+      this.loadAllCanciones();
       return;
     }
 
     this.cancionService.getCancionesByTags(tags).subscribe((data: CancionTagDTO[]) => {
-      //console.log("Canciones filtradas:", data);
-
       this.cancionesByTags = data;
       this.isFiltered = true;
-      this.noResults = data.length === 0; // Si no hay resultados, mostrar el mensaje de "sin resultados"
-
-      // Actualizar el arreglo de canciones filtradas y los estados
-      if (data.length > 0) {
-        this.cancionesByTags = data;
-        this.noResults = false;
-        this.page=1;
-      } else {
-        this.cancionesByTags = [];
-        this.noResults = true;
-      }
+      this.noResults = data.length === 0;
+      this.page = data.length > 0 ? 1 : 0;
     }, (error) => {
-      //console.error("Error al filtrar canciones:", error);
       this.cancionesByTags = [];
       this.isFiltered = true;
       this.noResults = true;
     });
   }
 
-  onSearch(searchTerm: string): void {
-    if (!searchTerm.trim()) {
-      this.loadAllCanciones(); 
+  onSearch(event: Event | string): void {
+    let searchTerm: string;
+    if (typeof event === 'string') {
+      searchTerm = event;
+    } else {
+      const inputElement = event.target as HTMLInputElement | null;
+      searchTerm = inputElement?.value.trim() || '';
+    }
+
+    if (!searchTerm) {
+      this.loadAllCanciones();
       return;
     }
 
@@ -84,4 +104,20 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  //Agrege esta funcion para los combos
+  onTagCheckChange(event: Event, tagString: string) {
+    const formArray: FormArray = this.otrosForm.get('tags') as FormArray;
+
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.checked) {
+      formArray.push(this.fb.control(tagString));
+    } else {
+      let index = formArray.controls.findIndex(x => x.value == tagString);
+      formArray.removeAt(index);
+    }
+
+    // Convertimos tags de string a número si es necesario para onTagsSelected
+    const tagIds = formArray.value.map((tag: string) => parseInt(tag.split(':')[0], 10));
+    this.onTagsSelected(tagIds);
+  }
 }

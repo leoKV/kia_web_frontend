@@ -1,8 +1,8 @@
 <div class="container-fluid g-0">
   <app-header [showElements]="['menuButton', 'logo', 'search', 'cart']" (sideNavToggled)="sideNavStatus = $event;" (search)="onSearch($event)"></app-header>
   <main>
-    <app-sidenav [sideNavStatus]="sideNavStatus" [ngClass]="{'app-sidenav-open':sideNavStatus}" (tagsSelected)="onTagsSelected($event)"></app-sidenav>
-    <div class="display-area p-4" [ngClass]="{'display-area-shrink':sideNavStatus}">
+    <app-sidenav [sideNavStatus]="sideNavStatus" [ngClass]="{'app-sidenav-open': sideNavStatus}" (tagsSelected)="onTagsSelected($event)"></app-sidenav>
+    <div class="display-area p-4" [ngClass]="{'display-area-shrink': sideNavStatus}">
       <div class="row bread">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
@@ -10,63 +10,46 @@
           </ol>
         </nav>
       </div>
+        <!--Aqui se esta mapeando los combos-->
       <div class="row mt-3">
-        <div class="col-12 col-sm-6 col-md-4 mb-3">
+        <div *ngFor="let tipoTag of tiposTags" class="col-12 col-sm-6 col-md-4 mb-3">
           <div class="dropdown">
-            <a class="btn btn-secondary dropdown-toggle w-50" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Genero
-            </a>
-            <ul class="dropdown-menu w-50">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-md-4 mb-3">
-          <div class="dropdown">
-            <a class="btn btn-secondary dropdown-toggle w-50" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Ritmo
-            </a>
-          
-            <ul class="dropdown-menu w-50">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </div>
-        </div>
-        
-        <div class="col-12 col-sm-6 col-md-4 mb-3">
-          <div class="dropdown">
-            <a class="btn btn-secondary dropdown-toggle w-50" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-             Otro
-            </a>
-          
-            <ul class="dropdown-menu w-50">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="{{'dropdown-' + tipoTag.tipo_tag_id}}" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ tipoTag.tipo_tag }}
+            </button>
+            <ul class="dropdown-menu w-100" [attr.aria-labelledby]="'dropdown-' + tipoTag.tipo_tag_id">
+              <li *ngFor="let tag of tipoTag.tags">
+                <ng-container *ngIf="tipoTag.tipo_tag_id === 3">
+                  <input
+                    type="checkbox"
+                    [value]="tag.split(':')[0]"
+                    (change)="onTagCheckChange($event, tag)">
+                  <label>{{ tag.split(':')[1] }}</label>
+                </ng-container>
+                <ng-container *ngIf="tipoTag.tipo_tag_id !== 3">
+                  <label>{{ tag.split(':')[1] }}</label>
+                </ng-container>
+              </li>
             </ul>
           </div>
         </div>
       </div>
+      <!--  -->
       <div class="divider-line"></div>
-      <div class="row" [ngClass]="{'card-container-menu-open':sideNavStatus}">
+      <div class="row" [ngClass]="{'card-container-menu-open': sideNavStatus}">
         <ng-container *ngIf="!isFiltered">
-          <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-5" *ngFor="let cancion of canciones | paginate: {itemsPerPage: 12, currentPage: page}">
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-5" *ngFor="let cancion of canciones | paginate: { itemsPerPage: 12, currentPage: page }">
             <app-card-song [cancion]="cancion"></app-card-song>
           </div>
         </ng-container>
         <ng-container *ngIf="isFiltered && !noResults">
-          <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-5" *ngFor="let cancionTag of cancionesByTags | paginate: {itemsPerPage: 12, currentPage: page}">
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-5" *ngFor="let cancionTag of cancionesByTags | paginate: { itemsPerPage: 12, currentPage: page }">
             <app-card-song [cancionTag]="cancionTag"></app-card-song>
           </div>
         </ng-container>
         <ng-container *ngIf="isFiltered && noResults">
           <div class="col-12" id="noResults">
-            <p >Lo sentimos, no se encontraron resultados de búsqueda.</p>
+            <p>Lo sentimos, no se encontraron resultados de búsqueda.</p>
             <img src="../assets/img/mariachi.gif" alt="mariachi llorando">
           </div>
         </ng-container>
@@ -74,4 +57,9 @@
       <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Siguiente" *ngIf="!noResults" class="pagination"></pagination-controls>
     </div>
   </main>
+</div>
+
+<!-- Barra de búsqueda -->
+<div>
+  <input type="text" placeholder="Buscar canciones..." (input)="onSearch($event)">
 </div>
