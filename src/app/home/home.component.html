@@ -10,7 +10,7 @@
           </ol>
         </nav>
       </div>
-        <!--Aqui se esta mapeando los combos-->
+
       <div class="row mt-3">
         <div *ngFor="let tipoTag of tiposTags" class="col-12 col-sm-6 col-md-4 mb-3">
           <div class="dropdown">
@@ -27,14 +27,14 @@
                   <label>{{ tag.split(':')[1] }}</label>
                 </ng-container>
                 <ng-container *ngIf="tipoTag.tipo_tag_id !== 3">
-                  <label>{{ tag.split(':')[1] }}</label>
+                  <a class="dropdown-item" (click)="onTagItemSelected(tag)">{{ tag.split(':')[1] }}</a>
                 </ng-container>
               </li>
             </ul>
           </div>
         </div>
       </div>
-      <!--  -->
+
       <div class="divider-line"></div>
       <div class="row" [ngClass]="{'card-container-menu-open': sideNavStatus}">
         <ng-container *ngIf="!isFiltered">

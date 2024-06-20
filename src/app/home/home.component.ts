@@ -117,8 +117,19 @@ export class HomeComponent implements OnInit {
       formArray.removeAt(index);
     }
 
+
+
     // Convertimos tags de string a número si es necesario para onTagsSelected
     const tagIds = formArray.value.map((tag: string) => parseInt(tag.split(':')[0], 10));
     this.onTagsSelected(tagIds);
   }
+  onTagItemSelected(tagString: string) {
+    const tagId = parseInt(tagString.split(':')[0], 10);
+    this.onTagsSelected([tagId]);
+  }
+
+
+
 }
+
+
