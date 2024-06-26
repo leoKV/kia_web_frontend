@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CancionTagDTO } from '../../models/cancion-tag.dto';
 import { CancionDetailDTO } from '../../models/cancion-detail.dto';
+import { Parametro } from '../../models/parametro';
 
 @Injectable({
   providedIn: 'root'
@@ -31,5 +32,9 @@ export class CancionService {
   getCancionDetailById(id:number):Observable<CancionDetailDTO>{
     const params = new HttpParams().set('id', id.toString());
     return this.http.get<CancionDetailDTO>(`${this.API_URL}cancion/detalle/`, {params});
+  }
+
+  getUrlDemoState():Observable<Parametro>{
+    return this.http.get<Parametro>(`${this.API_URL}cancion/urlDemo/`);
   }
 }

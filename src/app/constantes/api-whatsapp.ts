@@ -1,0 +1,1 @@
+export const WHATSAPP_API = 'https://api.whatsapp.com/send';

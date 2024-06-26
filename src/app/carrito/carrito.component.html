@@ -44,7 +44,7 @@
         <div class="divider-line"></div>
 
         <div class="d-flex justify-content-center mt-3">
-          <button class="btn btn-success btn-responsive" [disabled]="canciones.length === 0">
+          <button class="btn btn-success btn-responsive" [disabled]="canciones.length === 0" (click)="sendCartByWhatsApp()">
             <i class="fa-solid fa-paper-plane"></i> Enviar lista de pedidos
           </button>
         </div>

@@ -4,6 +4,7 @@ import { CancionService } from '../services/cancion/cancion.service';
 import { CancionDetailDTO } from '../models/cancion-detail.dto';
 import { CartService } from '../services/cart/cart.service';
 import Swal from 'sweetalert2';
+import { Parametro } from '../models/parametro';
 
 @Component({
   selector: 'app-cancion-detail',
@@ -13,6 +14,9 @@ import Swal from 'sweetalert2';
 export class CancionDetailComponent implements OnInit {
 
   cancionDetail : CancionDetailDTO | undefined;
+  parametroUrlDemo: Parametro | undefined;
+  filteredUrls: string[] = [];
+  filteredTiposUrls: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -25,12 +29,46 @@ export class CancionDetailComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.loadCancionDetail(parseInt(id, 10));
+      this.loadUrlDemoState();
     }
   }
 
   loadCancionDetail(id: number): void {
     this.cancionService.getCancionDetailById(id).subscribe((data: CancionDetailDTO) => {
       this.cancionDetail = data;
+      this.filterUrls();
+    });
+  }
+
+  loadUrlDemoState(){
+    this.cancionService.getUrlDemoState().subscribe((data: Parametro) =>{
+      this.parametroUrlDemo = data;
+      if(this.parametroUrlDemo){
+        this.filterUrls();
+      }
+    });
+  }
+
+  filterUrls(): void {
+    if (!this.cancionDetail || !this.parametroUrlDemo) {
+      return;
+    }
+
+    const isDemo = this.parametroUrlDemo.p_Valor.toLowerCase() === 'true';
+    this.filteredUrls = [];
+    this.filteredTiposUrls = [];
+
+    this.cancionDetail.urls?.forEach((url, index) => {
+      const tipoUrl = this.cancionDetail?.tipos_urls?.[index];
+      if (tipoUrl) {
+        if (isDemo && tipoUrl.toLowerCase() === 'demo') {
+          this.filteredUrls.push(url);
+          this.filteredTiposUrls.push(tipoUrl);
+        } else if (!isDemo && tipoUrl.toLowerCase() === 'source') {
+          this.filteredUrls.push(url);
+          this.filteredTiposUrls.push(tipoUrl);
+        }
+      }
     });
   }
 
@@ -63,7 +101,7 @@ export class CancionDetailComponent implements OnInit {
       Swal.fire({
         position: "top-end",
         icon: "success",
-        title: "URL copiado al portapapeles",
+        title: "URL copiada al portapapeles",
         showConfirmButton: false,
         timer: 2500
       });

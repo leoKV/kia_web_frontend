@@ -14,17 +14,17 @@
       <div class="row mt-3">
         <div *ngFor="let tipoTag of tiposTags" class="col-12 col-sm-6 col-md-4 mb-3">
           <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="{{'dropdown-' + tipoTag.tipo_tag_id}}" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-secondary dropdown-toggle w-50" type="button" id="{{'dropdown-' + tipoTag.tipo_tag_id}}" data-bs-toggle="dropdown" aria-expanded="false">
               {{ tipoTag.tipo_tag }}
             </button>
-            <ul class="dropdown-menu w-100" [attr.aria-labelledby]="'dropdown-' + tipoTag.tipo_tag_id">
+            <ul class="dropdown-menu w-50" [attr.aria-labelledby]="'dropdown-' + tipoTag.tipo_tag_id">
               <li *ngFor="let tag of tipoTag.tags">
                 <ng-container *ngIf="tipoTag.tipo_tag_id === 3">
                   <input
                     type="checkbox"
                     [value]="tag.split(':')[0]"
-                    (change)="onTagCheckChange($event, tag)">
-                  <label>{{ tag.split(':')[1] }}</label>
+                    (change)="onTagCheckChange($event, tag)" style="margin-left: 5px;">
+                  <label style="margin-left: 5px;">{{ tag.split(':')[1] }}</label>
                 </ng-container>
                 <ng-container *ngIf="tipoTag.tipo_tag_id !== 3">
                   <a class="dropdown-item" (click)="onTagItemSelected(tag)">{{ tag.split(':')[1] }}</a>
