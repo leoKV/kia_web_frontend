@@ -5,6 +5,7 @@ import { CancionDetailDTO } from '../models/cancion-detail.dto';
 import { CartService } from '../services/cart/cart.service';
 import Swal from 'sweetalert2';
 import { Parametro } from '../models/parametro';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-cancion-detail',
@@ -15,14 +16,15 @@ export class CancionDetailComponent implements OnInit {
 
   cancionDetail : CancionDetailDTO | undefined;
   parametroUrlDemo: Parametro | undefined;
-  filteredUrls: string[] = [];
+  filteredUrls: SafeResourceUrl[] = [];
   filteredTiposUrls: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private cancionService: CancionService,
     private cartService: CartService,
-    private router: Router  // Añadir Router al constructor
+    private router: Router,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {

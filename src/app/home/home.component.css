@@ -118,3 +118,8 @@ app-sidenav::-webkit-scrollbar-thumb:hover {
 .bread{
     background-color: rgba(255, 255, 255, 0.3);
 }
+
+.selected-option {
+    background-color: #4f97e4;
+    color: white;
+}

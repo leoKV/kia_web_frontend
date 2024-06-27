@@ -12,24 +12,24 @@
       </div>
 
       <div class="row mt-3">
-        <div *ngFor="let tipoTag of tiposTags" class="col-12 col-sm-6 col-md-4 mb-3">
+        <div class="col-12 col-sm-6 col-md-4 mb-3" *ngFor="let item of list">
           <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle w-50" type="button" id="{{'dropdown-' + tipoTag.tipo_tag_id}}" data-bs-toggle="dropdown" aria-expanded="false">
-              {{ tipoTag.tipo_tag }}
-            </button>
-            <ul class="dropdown-menu w-50" [attr.aria-labelledby]="'dropdown-' + tipoTag.tipo_tag_id">
-              <li *ngFor="let tag of tipoTag.tags">
-                <ng-container *ngIf="tipoTag.tipo_tag_id === 3">
-                  <input
-                    type="checkbox"
-                    [value]="tag.split(':')[0]"
-                    (change)="onTagCheckChange($event, tag)" style="margin-left: 5px;">
-                  <label style="margin-left: 5px;">{{ tag.split(':')[1] }}</label>
-                </ng-container>
-                <ng-container *ngIf="tipoTag.tipo_tag_id !== 3">
-                  <a class="dropdown-item" (click)="onTagItemSelected(tag)">{{ tag.split(':')[1] }}</a>
-                </ng-container>
-              </li>
+            <a class="btn btn-secondary dropdown-toggle w-50" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{item.name}}</a>
+            <ul class="dropdown-menu w-50" >
+              <ng-container *ngIf="item.name && (item.name.toLowerCase() === 'genero' || item.name.toLowerCase() === 'ritmo'); else checkboxTemplate">
+                <li class="sub-nav-list-item">
+                  <a class="dropdown-item" (click)="clearFilters(item.name)" [ngClass]="{'selected-option': isAllSelected(item.name)}">Todos</a>
+                </li>
+                <li *ngFor="let subItem of item.subItems">
+                  <a name="" class="dropdown-item" (click)="onTagChange($event, subItem.id, item.name)" [ngClass]="{'selected-option': subItem.selected}">{{subItem.name}}</a>
+                </li>
+              </ng-container>
+              <ng-template #checkboxTemplate>
+                <li *ngFor="let subItem of item.subItems">
+                  <input type="checkbox" [id]="subItem.name" [name]="subItem.name" [value]="subItem.name" class="form-check-input" [checked]="subItem.selected" style="margin-left: 5px;" (click)="onTagChange($event, subItem.id, item.name)">
+                  <label [for]="subItem.name" class="form-check-label" style="margin-left: 5px;">{{subItem.name}}</label>
+                </li>
+              </ng-template>
             </ul>
           </div>
         </div>
