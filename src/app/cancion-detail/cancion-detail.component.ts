@@ -16,8 +16,9 @@ export class CancionDetailComponent implements OnInit {
 
   cancionDetail : CancionDetailDTO | undefined;
   parametroUrlDemo: Parametro | undefined;
-  filteredUrls: SafeResourceUrl[] = [];
+  filteredUrls: string[] = [];
   filteredTiposUrls: string[] = [];
+  safeVideoUrl: SafeResourceUrl | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,9 +46,7 @@ export class CancionDetailComponent implements OnInit {
   loadUrlDemoState(){
     this.cancionService.getUrlDemoState().subscribe((data: Parametro) =>{
       this.parametroUrlDemo = data;
-      if(this.parametroUrlDemo){
-        this.filterUrls();
-      }
+      this.filterUrls();
     });
   }
 
@@ -66,12 +65,25 @@ export class CancionDetailComponent implements OnInit {
         if (isDemo && tipoUrl.toLowerCase() === 'demo') {
           this.filteredUrls.push(url);
           this.filteredTiposUrls.push(tipoUrl);
+          this.safeVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.convertToEmbedUrl(url, 'demo'));
         } else if (!isDemo && tipoUrl.toLowerCase() === 'source') {
           this.filteredUrls.push(url);
           this.filteredTiposUrls.push(tipoUrl);
+          this.safeVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.convertToEmbedUrl(url, 'source'));
         }
       }
     });
+  }
+
+  convertToEmbedUrl(url: string, tipo: string): string {
+    if (tipo === 'demo') {
+      // Asume que la URL demo contiene solo el ID del video
+      return `https://www.youtube.com/embed/${url}`;
+    } else {
+      // Extrae el ID del video de la URL completa
+      const videoId = url.split('v=')[1] || url.split('/').pop();
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
   }
 
   addToCart(): void {

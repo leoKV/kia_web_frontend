@@ -32,6 +32,7 @@ export class HomeComponent implements OnInit {
     this.loadTags();
   }
 
+
   loadAllCanciones() {
     this.cancionService.getAllCanciones().subscribe((data: CancionDTO[]) => {
       this.canciones = data;
@@ -83,6 +84,8 @@ export class HomeComponent implements OnInit {
       this.noResults = true;
     });
   }
+
+  
 
 
   onSearch(event: Event | string): void {

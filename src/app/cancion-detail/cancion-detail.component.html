@@ -33,13 +33,12 @@
         <p>Tags: {{ cancionDetail.tags.join(", ") }}</p>
         <div class="divider-line"></div>
         <div *ngIf="filteredUrls.length > 0">
-          <h2>URLs</h2>
-          <ul>
-            <li *ngFor="let url of filteredUrls; let i = index">
-              {{ url }} ({{ filteredTiposUrls[i] }})
-            </li>
-          </ul>
+          <div *ngIf="safeVideoUrl">
+            <h2>Video</h2>
+            <iframe [src]="safeVideoUrl" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+          </div>
         </div>
+
       </div>
 
       <div class="d-flex justify-content-center mt-3">
