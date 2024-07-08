@@ -2,25 +2,26 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { TagService } from '../services/tag/tag.service';
 import { TipoTagDTO } from '../models/tipo-tag.dto';
 
-
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
-  styleUrl: './sidenav.component.css'
+  styleUrls: ['./sidenav.component.css']
 })
 export class SidenavComponent implements OnInit, OnChanges {
   @Input() sideNavStatus: boolean = false;
   @Output() tagsSelected = new EventEmitter<number[]>();
 
-  list: any[] = []; //Inicializando lista de tags como vacía.
+  list: any[] = []; // Inicializando lista de tags como vacía.
   selectedTags: Set<number> = new Set<number>();
 
   // Almacena el estado de los elementos seleccionados
   selectedStates: { [key: string]: Set<number> } = {};
 
-  constructor(public tagService: TagService){}
+  constructor(public tagService: TagService) {}
+
   ngOnInit(): void {
     this.loadTags();
+    this.loadSelectedStates();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -80,6 +81,7 @@ export class SidenavComponent implements OnInit, OnChanges {
   closeAllSubmenus(): void {
     this.list.forEach(item => item.open = false);
   }
+
   onTagChange(event: any, tagId: number, itemName: string): void {
     const grupo = this.list.find(item => item.name === itemName);
 
@@ -102,6 +104,7 @@ export class SidenavComponent implements OnInit, OnChanges {
     // Actualiza el estado de la opción "Todas"
     grupo.allSelected = this.selectedStates[itemName].size === 0;
 
+    this.saveSelectedStates();
     this.tagsSelected.emit(Array.from(this.selectedTags));
   }
 
@@ -119,7 +122,25 @@ export class SidenavComponent implements OnInit, OnChanges {
       subItem.selected = false;
     });
     grupo.allSelected = true; // Marcamos "Todas" como seleccionada
+    this.saveSelectedStates();
     this.tagsSelected.emit(Array.from(this.selectedTags));
   }
 
+  saveSelectedStates(): void {
+    const state: { [key: string]: number[] } = {};
+    for (const key in this.selectedStates) {
+      state[key] = Array.from(this.selectedStates[key]);
+    }
+    localStorage.setItem('selectedStates', JSON.stringify(state));
+  }
+
+  loadSelectedStates(): void {
+    const state = localStorage.getItem('selectedStates');
+    if (state) {
+      const parsedState = JSON.parse(state) as { [key: string]: number[] };
+      for (const key in parsedState) {
+        this.selectedStates[key] = new Set(parsedState[key]);
+      }
+    }
+  }
 }

@@ -28,10 +28,10 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.clearLocalStorageOnReload();
     this.loadAllCanciones();
     this.loadTags();
   }
-
 
   loadAllCanciones() {
     this.cancionService.getAllCanciones().subscribe((data: CancionDTO[]) => {
@@ -49,44 +49,38 @@ export class HomeComponent implements OnInit {
         open: false,
         subItems: tag.tags.map(tagString => {
           const [id, name] = tagString.split(':');
-          return { id: +id, name, selected: false };  // Aseguramos que 'selected' esté presente
+          return { id: +id, name, selected: false };
         })
       }));
+      this.loadSavedFilters(); // Cargar los filtros guardados después de cargar las etiquetas
     });
   }
 
   onTagsSelected(tags: number[]): void {
     if (tags.length === 0) {
-      this.loadAllCanciones(); // Si no hay etiquetas seleccionadas, cargar todas las canciones
+      this.loadAllCanciones();
       return;
     }
 
     this.cancionService.getCancionesByTags(tags).subscribe((data: CancionTagDTO[]) => {
-      //console.log("Canciones filtradas:", data);
-
       this.cancionesByTags = data;
       this.isFiltered = true;
-      this.noResults = data.length === 0; // Si no hay resultados, mostrar el mensaje de "sin resultados"
+      this.noResults = data.length === 0;
 
-      // Actualizar el arreglo de canciones filtradas y los estados
       if (data.length > 0) {
         this.cancionesByTags = data;
         this.noResults = false;
-        this.page=1;
+        this.page = 1;
       } else {
         this.cancionesByTags = [];
         this.noResults = true;
       }
     }, (error) => {
-      //console.error("Error al filtrar canciones:", error);
       this.cancionesByTags = [];
       this.isFiltered = true;
       this.noResults = true;
     });
   }
-
-  
-
 
   onSearch(event: Event | string): void {
     let searchTerm: string;
@@ -123,14 +117,14 @@ export class HomeComponent implements OnInit {
   isAllSelected(itemName: string): boolean {
     const grupo = this.list.find(item => item.name === itemName);
     if (!grupo) return false;
-  
+
     return grupo.subItems.every((subItem: { selected: boolean }) => !subItem.selected);
   }
 
   onTagChange(event: any, tagId: number, itemName: string): void {
     const inputType = event.target.type;
     const grupo = this.list.find(item => item.name === itemName);
-  
+
     if (inputType !== 'checkbox') {
       grupo.subItems.forEach((subItem: { id: number, selected: boolean }) => {
         this.selectedTags.delete(subItem.id);
@@ -156,8 +150,9 @@ export class HomeComponent implements OnInit {
         }
       }
     }
-  
+
     const tagsArray = Array.from(this.selectedTags);
+    this.saveFilters(); // Guardar los filtros en el almacenamiento local
     this.tagsSelected.emit(tagsArray);
     this.onTagsSelected(tagsArray);
   }
@@ -168,10 +163,59 @@ export class HomeComponent implements OnInit {
       this.selectedTags.delete(subItem.id);
       subItem.selected = false;
     });
+    this.saveFilters(); // Guardar los filtros en el almacenamiento local
     this.tagsSelected.emit(Array.from(this.selectedTags));
     this.onTagsSelected(Array.from(this.selectedTags));
   }
 
+  // Guardar los filtros en el almacenamiento local
+  saveFilters(): void {
+    if (this.isLocalStorageAvailable()) {
+      const filters = Array.from(this.selectedTags);
+      localStorage.setItem('selectedTags', JSON.stringify(filters));
+    } else {
+      console.error('localStorage is not available.');
+    }
+  }
+
+  // Cargar los filtros del almacenamiento local
+  loadSavedFilters(): void {
+    if (this.isLocalStorageAvailable()) {
+      const savedFiltersString = localStorage.getItem('selectedTags');
+      if (savedFiltersString) {
+        const savedFilters: number[] = JSON.parse(savedFiltersString);
+        savedFilters.forEach((tagId: number) => {
+          this.selectedTags.add(tagId);
+          this.list.forEach(grupo => {
+            const subItem = grupo.subItems.find((subItem: { id: number }) => subItem.id === tagId);
+            if (subItem) {
+              subItem.selected = true;
+            }
+          });
+        });
+      }
+      this.onTagsSelected(Array.from(this.selectedTags));
+    } else {
+      console.error('localStorage is not available.');
+    }
+  }
+
+  // Verificar si localStorage está disponible
+  isLocalStorageAvailable(): boolean {
+    try {
+      const test = 'localStorageTest';
+      localStorage.setItem(test, test);
+      localStorage.removeItem(test);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Limpiar el almacenamiento local al recargar la página
+  clearLocalStorageOnReload(): void {
+    if (this.isLocalStorageAvailable()) {
+      localStorage.removeItem('selectedTags');
+    }
+  }
 }
-
-

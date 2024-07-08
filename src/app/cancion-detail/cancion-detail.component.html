@@ -1,17 +1,12 @@
 <div class="container-fluid g-0">
-  <app-header
-    [showElements]="['logo', 'cart']"
-    headerClass="header-carrito"
-  ></app-header>
+  <app-header [showElements]="['logo', 'cart']" headerClass="header-carrito"></app-header>
   <main>
     <div class="display-area p-4">
       <div class="row bread">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item m-1"><a routerLink="/">Inicio</a></li>
-            <li class="breadcrumb-item active m-1" aria-current="page">
-              Detalles
-            </li>
+            <li class="breadcrumb-item active m-1" aria-current="page">Detalles</li>
           </ol>
         </nav>
       </div>
@@ -19,45 +14,37 @@
       <div class="divider-line"></div>
       <div class="d-flex justify-content-between">
         <div></div>
-        <a routerLink="/" type="button" class="btn btn-dark"
-          ><i class="fa-solid fa-arrow-left"></i> Regresar</a
-        >
+        <a routerLink="/" type="button" class="btn btn-dark"><i class="fa-solid fa-arrow-left"></i> Regresar</a>
       </div>
       <div *ngIf="cancionDetail">
-        <h2>#{{ cancionDetail.cancion_id }}</h2>
-        <h2>{{ cancionDetail.cancion_nombre }}</h2>
-        <p>Artista: {{ cancionDetail.artista }}</p>
-        
-        <div class="divider-line"></div>
-        <h2>Etiquetas</h2>
-        <p>Tags: {{ cancionDetail.tags.join(", ") }}</p>
-        <div class="divider-line"></div>
-        <div *ngIf="filteredUrls.length > 0">
+        <h2 class="cancion-titulo">#{{ cancionDetail.cancion_id }}</h2>
+        <h2 class="cancion-titulo">{{ cancionDetail.cancion_nombre }}</h2>
+        <!-- Video section -->
+        <div class="video-section" *ngIf="filteredUrls.length > 0">
           <div *ngIf="safeVideoUrl">
-            <h2>Video</h2>
-            <iframe [src]="safeVideoUrl" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+            <h2>Karaoke</h2>
+            <div class="karaoke-video-container">
+              <iframe [src]="safeVideoUrl" class="karaoke-video" frameborder="0" allowfullscreen></iframe>
+            </div>
           </div>
         </div>
-
+        <p class="artist-name">Artista: {{ cancionDetail.artista }}</p>
+        <div class="divider-line"></div>
+        <h2>Etiquetas</h2>
+        <div class="tags">
+          <span *ngFor="let tag of cancionDetail.tags; let i = index" [ngClass]="'tag-' + (i % 3 + 1)">
+            {{ tag }}
+          </span>
+        </div>
+        <div class="divider-line"></div>
       </div>
-
       <div class="d-flex justify-content-center mt-3">
         <div class="row justify-content-center w-100" style="max-width: 600px">
-          <div
-            class="col-6 col-md-6 d-flex justify-content-center mb-2 mb-md-0"
-          >
-            <!-- Otros contenidos del template -->
-            <button (click)="copyURL()" class="btn btn-primary w-100">
-              <i class="fa-solid fa-share-nodes"></i> Compartir
-            </button>
-            <!-- Otros contenidos del template -->
+          <div class="col-6 col-md-6 d-flex justify-content-center mb-2 mb-md-0">
+            <button (click)="copyURL()" class="btn btn-primary w-100"><i class="fa-solid fa-share-nodes"></i> Compartir</button>
           </div>
-          <div
-            class="col-6 col-md-6 d-flex justify-content-center mb-2 mb-md-0"
-          >
-            <button class="btn btn-success w-100" (click)="addToCart()">
-              <i class="fa-solid fa-cart-plus"></i> Agregar
-            </button>
+          <div class="col-6 col-md-6 d-flex justify-content-center mb-2 mb-md-0">
+            <button class="btn btn-success w-100" (click)="addToCart()"><i class="fa-solid fa-cart-plus"></i> Agregar</button>
           </div>
         </div>
       </div>

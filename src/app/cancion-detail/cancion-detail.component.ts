@@ -10,11 +10,11 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-cancion-detail',
   templateUrl: './cancion-detail.component.html',
-  styleUrls: ['./cancion-detail.component.css']  // Corregido: styleUrl -> styleUrls
+  styleUrls: ['./cancion-detail.component.css']
 })
 export class CancionDetailComponent implements OnInit {
 
-  cancionDetail : CancionDetailDTO | undefined;
+  cancionDetail: CancionDetailDTO | undefined;
   parametroUrlDemo: Parametro | undefined;
   filteredUrls: string[] = [];
   filteredTiposUrls: string[] = [];
@@ -43,8 +43,8 @@ export class CancionDetailComponent implements OnInit {
     });
   }
 
-  loadUrlDemoState(){
-    this.cancionService.getUrlDemoState().subscribe((data: Parametro) =>{
+  loadUrlDemoState(): void {
+    this.cancionService.getUrlDemoState().subscribe((data: Parametro) => {
       this.parametroUrlDemo = data;
       this.filterUrls();
     });
@@ -73,14 +73,18 @@ export class CancionDetailComponent implements OnInit {
         }
       }
     });
+
+    console.log('CancionDetail:', this.cancionDetail);
+    console.log('ParametroUrlDemo:', this.parametroUrlDemo);
+    console.log('FilteredUrls:', this.filteredUrls);
+    console.log('FilteredTiposUrls:', this.filteredTiposUrls);
+    console.log('SafeVideoUrl:', this.safeVideoUrl);
   }
 
   convertToEmbedUrl(url: string, tipo: string): string {
     if (tipo === 'demo') {
-      // Asume que la URL demo contiene solo el ID del video
       return `https://www.youtube.com/embed/${url}`;
     } else {
-      // Extrae el ID del video de la URL completa
       const videoId = url.split('v=')[1] || url.split('/').pop();
       return `https://www.youtube.com/embed/${videoId}`;
     }
@@ -115,12 +119,18 @@ export class CancionDetailComponent implements OnInit {
       Swal.fire({
         position: "top-end",
         icon: "success",
-        title: "URL copiada al portapapeles",
+        title: "URL copiado al portapapeles",
         showConfirmButton: false,
         timer: 2500
       });
+      this.shareOnWhatsApp(url);  // Llama a la función para compartir en WhatsApp
     }).catch(err => {
       console.error('Error al copiar el URL: ', err);
     });
+  }
+
+  shareOnWhatsApp(url: string): void {
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent('¡Mira este karaoke! ' + url)}`;
+    window.open(whatsappUrl, '_blank');
   }
 }
