@@ -62,12 +62,9 @@ export class HomeComponent implements OnInit {
     }
 
     this.cancionService.getCancionesByTags(tags).subscribe((data: CancionTagDTO[]) => {
-      //console.log("Canciones filtradas:", data);
-
       this.cancionesByTags = data;
       this.isFiltered = true;
       this.noResults = data.length === 0; // Si no hay resultados, mostrar el mensaje de "sin resultados"
-
       // Actualizar el arreglo de canciones filtradas y los estados
       if (data.length > 0) {
         this.cancionesByTags = data;
@@ -78,7 +75,6 @@ export class HomeComponent implements OnInit {
         this.noResults = true;
       }
     }, (error) => {
-      //console.error("Error al filtrar canciones:", error);
       this.cancionesByTags = [];
       this.isFiltered = true;
       this.noResults = true;
