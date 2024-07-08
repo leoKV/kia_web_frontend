@@ -51,7 +51,6 @@ export class CartService {
   }
 
   removeFromCart(id: number): void {
-    console.log('ID DE LA CANCIÓN QUE SE ELIMINA: ',id);
     if (!this.isLocalStorageAvailable()) {
       return;
     }

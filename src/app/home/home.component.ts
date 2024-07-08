@@ -66,7 +66,6 @@ export class HomeComponent implements OnInit {
       this.cancionesByTags = data;
       this.isFiltered = true;
       this.noResults = data.length === 0;
-
       if (data.length > 0) {
         this.cancionesByTags = data;
         this.noResults = false;

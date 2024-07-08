@@ -22,15 +22,14 @@
     font-size: 25px;
     overflow: hidden;
     text-overflow: ellipsis;
-}
+} 
 
 .card-footer{
     color: white;
     font-size: 18px;
     background-color: #465949;
     padding: 0.5rem;
-    text-align: center;
-   
+    text-align: center;  
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -60,6 +59,18 @@
 
 .card:hover .card-header,
 .card:hover .card-body,
-.card:hover .card-footer {
+.card:hover .card-footer{
     background-color: rgba(247, 244, 244, 0.3);
+    color: white;
+}
+.card:hover .card-title{
+    color: white;
+}
+
+.card:hover .card-body{
+    background-image: url('../../assets/img/kia-card.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
 }
