@@ -136,3 +136,25 @@ main{
     background-color: rgba(255, 255, 255, 0.3);
 }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    color: white;
+    font-size: larger;
+    font-family: 'Helvetica', sans-serif;
+  }
+
+.pagination ::ng-deep .ngx-pagination .current {
+    background: #0575E6;
+    background: -webkit-linear-gradient(to left, #021B79, #0575E6);
+    background: linear-gradient(to left, #021B79, #0575E6);
+    color: white;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 5px;
+}
+

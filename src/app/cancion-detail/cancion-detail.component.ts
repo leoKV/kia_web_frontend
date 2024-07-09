@@ -73,12 +73,6 @@ export class CancionDetailComponent implements OnInit {
         }
       }
     });
-
-    console.log('CancionDetail:', this.cancionDetail);
-    console.log('ParametroUrlDemo:', this.parametroUrlDemo);
-    console.log('FilteredUrls:', this.filteredUrls);
-    console.log('FilteredTiposUrls:', this.filteredTiposUrls);
-    console.log('SafeVideoUrl:', this.safeVideoUrl);
   }
 
   convertToEmbedUrl(url: string, tipo: string): string {

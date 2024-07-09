@@ -13,6 +13,7 @@ import { Parametro } from '../models/parametro';
 export class CarritoComponent implements OnInit{
   canciones: CancionDetailDTO[] = [];
   numero: Parametro | undefined;
+  page!: number;
   private orderChecked: boolean = false;
 
   constructor(private cartService: CartService){}

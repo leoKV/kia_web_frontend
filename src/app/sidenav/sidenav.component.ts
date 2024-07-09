@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { TagService } from '../services/tag/tag.service';
+import { FilterService } from '../services/filter/filter.service';
 import { TipoTagDTO } from '../models/tipo-tag.dto';
 
 @Component({
@@ -11,17 +12,21 @@ export class SidenavComponent implements OnInit, OnChanges {
   @Input() sideNavStatus: boolean = false;
   @Output() tagsSelected = new EventEmitter<number[]>();
 
-  list: any[] = []; // Inicializando lista de tags como vacía.
+  list: any[] = []; //Inicializando lista de tags como vacía.
   selectedTags: Set<number> = new Set<number>();
 
-  // Almacena el estado de los elementos seleccionados
-  selectedStates: { [key: string]: Set<number> } = {};
-
-  constructor(public tagService: TagService) {}
+  constructor(public tagService: TagService, private filterService: FilterService) {}
 
   ngOnInit(): void {
     this.loadTags();
-    this.loadSelectedStates();
+    this.selectedTags = new Set(this.filterService.getSelectedTags());
+  }
+  updateSelectedTagsInList(): void {
+    this.list.forEach(group => {
+      group.subItems.forEach((subItem: { id: number, selected: boolean }) => {
+        subItem.selected = this.selectedTags.has(subItem.id);
+      });
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -41,20 +46,10 @@ export class SidenavComponent implements OnInit, OnChanges {
         open: false,
         subItems: tag.tags.map(tagString => {
           const [id, name] = tagString.split(':');
-          return { id: +id, name, selected: false };
+          return { id: +id, name, selected: this.selectedTags.has(+id) };
         }),
-        allSelected: false // Añadimos esta propiedad para gestionar la selección de "Todas"
+        allSelected: this.selectedTags.size === 0 // Consideramos "Todas" seleccionada si no hay otros elementos seleccionados
       }));
-
-      this.list.forEach(item => {
-        if (!this.selectedStates[item.name]) {
-          this.selectedStates[item.name] = new Set<number>();
-        }
-        item.subItems.forEach((subItem: { id: number, name: string, selected: boolean }) => {
-          subItem.selected = this.selectedStates[item.name].has(subItem.id);
-        });
-        item.allSelected = this.selectedStates[item.name].size === 0; // Consideramos "Todas" seleccionada si no hay otros elementos seleccionados
-      });
     });
   }
 
@@ -71,10 +66,6 @@ export class SidenavComponent implements OnInit, OnChanges {
   toggleSubmenu(item: any): void {
     if (this.sideNavStatus) {
       item.open = !item.open;
-      // Restaurar estado de selección cuando se abre un submenú
-      if (item.open) {
-        this.restoreSelectedStates(item);
-      }
     }
   }
 
@@ -89,58 +80,33 @@ export class SidenavComponent implements OnInit, OnChanges {
       if (event.target.type === 'radio') {
         grupo.subItems.forEach((subItem: { id: number, name: string, selected: boolean }) => {
           this.selectedTags.delete(subItem.id);
-          this.selectedStates[itemName].delete(subItem.id);
           subItem.selected = false;
         });
         grupo.allSelected = false;
       }
       this.selectedTags.add(tagId);
-      this.selectedStates[itemName].add(tagId);
     } else {
       this.selectedTags.delete(tagId);
-      this.selectedStates[itemName].delete(tagId);
     }
 
     // Actualiza el estado de la opción "Todas"
-    grupo.allSelected = this.selectedStates[itemName].size === 0;
-
-    this.saveSelectedStates();
+    grupo.allSelected = this.selectedTags.size === 0;
+    this.updateSelectedTagsInList();
     this.tagsSelected.emit(Array.from(this.selectedTags));
-  }
-
-  restoreSelectedStates(item: any): void {
-    item.subItems.forEach((subItem: { id: number, selected: boolean }) => {
-      subItem.selected = this.selectedStates[item.name].has(subItem.id);
-    });
+    this.filterService.setSelectedTags(Array.from(this.selectedTags)); 
   }
 
   clearFilters(itemName: string): void {
     const grupo = this.list.find(item => item.name === itemName);
     grupo.subItems.forEach((subItem: { id: number, name: string, selected: boolean }) => {
       this.selectedTags.delete(subItem.id);
-      this.selectedStates[itemName].delete(subItem.id);
       subItem.selected = false;
     });
     grupo.allSelected = true; // Marcamos "Todas" como seleccionada
-    this.saveSelectedStates();
+    this.updateSelectedTagsInList();
     this.tagsSelected.emit(Array.from(this.selectedTags));
-  }
-
-  saveSelectedStates(): void {
-    const state: { [key: string]: number[] } = {};
-    for (const key in this.selectedStates) {
-      state[key] = Array.from(this.selectedStates[key]);
-    }
-    localStorage.setItem('selectedStates', JSON.stringify(state));
-  }
-
-  loadSelectedStates(): void {
-    const state = localStorage.getItem('selectedStates');
-    if (state) {
-      const parsedState = JSON.parse(state) as { [key: string]: number[] };
-      for (const key in parsedState) {
-        this.selectedStates[key] = new Set(parsedState[key]);
-      }
-    }
+    this.filterService.clearSelectedTags();
+    
   }
 }
+

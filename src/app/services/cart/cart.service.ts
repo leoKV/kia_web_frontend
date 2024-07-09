@@ -12,7 +12,7 @@ export class CartService {
   // private storageKey = 'cart';
   private API_URL =  `${environment.apiUrl}`;
   private readonly CART_KEY = 'cart_items';
-
+  
   constructor(private http:HttpClient) { }
 
   private isLocalStorageAvailable(): boolean {

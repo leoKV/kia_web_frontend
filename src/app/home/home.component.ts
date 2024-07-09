@@ -4,6 +4,7 @@ import { CancionTagDTO } from '../models/cancion-tag.dto';
 import { CancionService } from '../services/cancion/cancion.service';
 import { TagService } from '../services/tag/tag.service';
 import { TipoTagDTO } from '../models/tipo-tag.dto';
+import { FilterService } from '../services/filter/filter.service';
 
 @Component({
   selector: 'app-home',
@@ -24,13 +25,20 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public cancionService: CancionService,
-    private tagService: TagService
+    private tagService: TagService,
+    private filterService: FilterService
   ) {}
 
   ngOnInit(): void {
-    this.clearLocalStorageOnReload();
     this.loadAllCanciones();
     this.loadTags();
+
+    // Cargar etiquetas seleccionadas desde el servicio
+    const savedTags = this.filterService.getSelectedTags();
+    if (savedTags.length > 0) {
+      this.selectedTags = new Set(savedTags);
+      this.applySavedTags(savedTags);
+    }
   }
 
   loadAllCanciones() {
@@ -52,20 +60,25 @@ export class HomeComponent implements OnInit {
           return { id: +id, name, selected: false };
         })
       }));
-      this.loadSavedFilters(); // Cargar los filtros guardados después de cargar las etiquetas
+      // Aplicar etiquetas guardadas después de cargar los tags
+      const savedTags = this.filterService.getSelectedTags();
+      if (savedTags.length > 0) {
+        this.applySavedTags(savedTags);
+      }
     });
   }
 
   onTagsSelected(tags: number[]): void {
     if (tags.length === 0) {
-      this.loadAllCanciones();
+      this.loadAllCanciones(); // Si no hay etiquetas seleccionadas, cargar todas las canciones
       return;
     }
 
     this.cancionService.getCancionesByTags(tags).subscribe((data: CancionTagDTO[]) => {
       this.cancionesByTags = data;
       this.isFiltered = true;
-      this.noResults = data.length === 0;
+      this.noResults = data.length === 0; // Si no hay resultados, mostrar el mensaje de "sin resultados"
+      // Actualizar el arreglo de canciones filtradas y los estados
       if (data.length > 0) {
         this.cancionesByTags = data;
         this.noResults = false;
@@ -151,9 +164,11 @@ export class HomeComponent implements OnInit {
     }
 
     const tagsArray = Array.from(this.selectedTags);
-    this.saveFilters(); // Guardar los filtros en el almacenamiento local
     this.tagsSelected.emit(tagsArray);
     this.onTagsSelected(tagsArray);
+
+    // Guardar etiquetas seleccionadas en el servicio
+    this.filterService.setSelectedTags(tagsArray);
   }
 
   clearFilters(itemName: string): void {
@@ -162,59 +177,20 @@ export class HomeComponent implements OnInit {
       this.selectedTags.delete(subItem.id);
       subItem.selected = false;
     });
-    this.saveFilters(); // Guardar los filtros en el almacenamiento local
     this.tagsSelected.emit(Array.from(this.selectedTags));
     this.onTagsSelected(Array.from(this.selectedTags));
+
+    // Eliminar etiquetas seleccionadas del servicio
+    this.filterService.clearSelectedTags();
   }
 
-  // Guardar los filtros en el almacenamiento local
-  saveFilters(): void {
-    if (this.isLocalStorageAvailable()) {
-      const filters = Array.from(this.selectedTags);
-      localStorage.setItem('selectedTags', JSON.stringify(filters));
-    } else {
-      console.error('localStorage is not available.');
-    }
-  }
-
-  // Cargar los filtros del almacenamiento local
-  loadSavedFilters(): void {
-    if (this.isLocalStorageAvailable()) {
-      const savedFiltersString = localStorage.getItem('selectedTags');
-      if (savedFiltersString) {
-        const savedFilters: number[] = JSON.parse(savedFiltersString);
-        savedFilters.forEach((tagId: number) => {
-          this.selectedTags.add(tagId);
-          this.list.forEach(grupo => {
-            const subItem = grupo.subItems.find((subItem: { id: number }) => subItem.id === tagId);
-            if (subItem) {
-              subItem.selected = true;
-            }
-          });
-        });
-      }
-      this.onTagsSelected(Array.from(this.selectedTags));
-    } else {
-      console.error('localStorage is not available.');
-    }
-  }
-
-  // Verificar si localStorage está disponible
-  isLocalStorageAvailable(): boolean {
-    try {
-      const test = 'localStorageTest';
-      localStorage.setItem(test, test);
-      localStorage.removeItem(test);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  // Limpiar el almacenamiento local al recargar la página
-  clearLocalStorageOnReload(): void {
-    if (this.isLocalStorageAvailable()) {
-      localStorage.removeItem('selectedTags');
-    }
+  applySavedTags(tagsArray: number[]): void {
+    this.list.forEach(group => {
+      group.subItems.forEach((subItem: { id: number, selected: boolean }) => {
+        subItem.selected = tagsArray.includes(subItem.id);
+      });
+    });
+    this.tagsSelected.emit(tagsArray);
+    this.onTagsSelected(tagsArray);
   }
 }

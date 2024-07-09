@@ -59,6 +59,15 @@ body {
   margin: 15px 0;
 }
 
+.breadcrumb-item{
+  color: white;
+  font-size:18px;
+}
+
+.bread{
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
 .video-section {
   margin: 15px 0;
 }

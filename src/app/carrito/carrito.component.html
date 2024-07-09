@@ -19,7 +19,7 @@
 
         <div *ngIf="canciones.length > 0; else noSongs">
           <div class="row mt-3">
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-5" *ngFor="let cancion of canciones">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-5" *ngFor="let cancion of canciones | paginate: { itemsPerPage: 12, currentPage: page }">
                 <div class="card">
                   <div class="card-header">Karaoke IA</div>
                   <div class="card-body">
@@ -32,6 +32,7 @@
               </div>
             </div>
           </div>
+          <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Siguiente" class="pagination"></pagination-controls>
         </div>
 
         <ng-template #noSongs>
