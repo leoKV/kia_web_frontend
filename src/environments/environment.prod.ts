@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://localhost:9000/kia_web/'
+    apiUrl: 'http://localhost:8000/kia_web/'
   };

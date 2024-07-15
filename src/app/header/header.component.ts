@@ -19,7 +19,6 @@ export class HeaderComponent {
   }
 
   onSearch(){
-   console.log(this.searchTerm);
    this.search.emit(this.searchTerm);  // Emitir el término de búsqueda
   }
 
